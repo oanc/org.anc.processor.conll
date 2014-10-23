@@ -1,22 +1,22 @@
 package org.anc.processor.conll
 
 import org.junit.Test
+import static org.junit.Assert.*
 
 /**
  * Created by danmccormack on 10/20/14.
  */
-class AnnotationTest
-{
-    String [] passingArray = ["PENN", "SENTENCES", "BIBER", "C5", "C7", "CB",
-                              "CONTENT", "EVENT", "FN", "FNTOK", "HEPPLE", "LOGICAL",
-                              "MPQA", "NC", "NE", "PTB", "NONE", "PTBTOK",
-                              "SLATE_COREF", "VC"]
-
+class AnnotationTest {
     @Test
-    void testValidAnnotations()
-    {
+    /**
+     * Cases to test: passing (1, all, a few)
+     *                failing (none, one wrong in a list of right, all wrong, spaces in words?)
+     */
+    void testValidAnnotations() {
         //assuming that an empty annotation selection is an error
         //and will return as false accordingly
-        assertTrue Annotation.validAnnotations(["PENN", "SENTENCES"])
+        def pass1 = ["PENN", "SENTENCES"]
+        println(pass1)
+        assertTrue new Annotation().validAnnotations(pass1)
     }
 }

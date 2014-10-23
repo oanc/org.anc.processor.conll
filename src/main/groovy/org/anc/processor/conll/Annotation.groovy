@@ -20,20 +20,17 @@ import java.lang.reflect.Array
 //Is in /private/var/corpora/MASC-3.0.0   Not sure if that is the same
 
 // conll can handle all combinations of annotations
-def AcceptableAntns = ["PENN", "SENTENCES", "BIBER", "C5", "C7", "CB",
-                       "CONTENT", "EVENT", "FN", "FNTOK", "HEPPLE", "LOGICAL",
-                       "MPQA", "NC", "NE", "PTB", "NONE", "PTBTOK",
-                       "SLATE_COREF", "VC"]
+AcceptableAntns = ["PENN", "SENTENCES", "BIBER", "C5", "C7", "CB",
+                   "CONTENT", "EVENT", "FN", "FNTOK", "HEPPLE", "LOGICAL",
+                   "MPQA", "NC", "NE", "PTB", "NONE", "PTBTOK",
+                   "SLATE_COREF", "VC"]
 
-@Path('/annotations')
-class Annotations
-{
+@Path('/Annotations')
+class Annotations {
     @GET
     Response Process(@QueryParam('annotations') String annotations,
-                     @QueryParam('docID') String docID)
-    {
-        if (validAnnotations(annotations))
-        {
+                     @QueryParam('docID') String docID) {
+        if (validAnnotations(annotations)) {
             //process docID accordingly
         }
     }
@@ -44,14 +41,11 @@ class Annotations
  * INPUT: An array of, Array<String> type, of the annotations
  * OUTPUT: True/False whether the annotations are valid for conll processing
  */
-def validAnnotations (antnArray)
-{
+def validAnnotations(antnArray) {
     boolean returnval = true
-    for (antn in antnArray)
-    {
+    for (antn in antnArray) {
         // if any of the annotations in the array equal the current annotation
-        if (!AcceptableAntns.any().equals(antn))
-        {
+        if (!AcceptableAntns.any(equals(antn))) {
             returnval = false
             break
         }
