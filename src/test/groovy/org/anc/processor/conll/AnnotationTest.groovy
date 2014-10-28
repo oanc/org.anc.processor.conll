@@ -17,6 +17,6 @@ class AnnotationTest {
         //and will return as false accordingly
         def pass1 = ["PENN", "SENTENCES"]
         println(pass1)
-        assertTrue new Annotation().validAnnotations(pass1)
+        assertTrue new Annotations().validAnnotations(pass1)
     }
 }
