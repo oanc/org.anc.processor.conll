@@ -1,12 +1,5 @@
 package org.anc.processor.conll
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion
-import groovy.transform.Immutable
-import org.anc.conf.AnnotationConfig
-import org.anc.conf.AnnotationType
-import org.anc.index.api.Index
-import org.anc.index.IndexFactory
-
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.QueryParam
@@ -14,14 +7,9 @@ import javax.xml.ws.Response
 import java.lang.reflect.Array
 
 /**
- * Created by danmccormack on 10/7/14.
+ * Created by danmccormack on 10/31/14.
  */
-
-//Is in /private/var/corpora/MASC-3.0.0   Not sure if that is the same
-
-@Path ('/Annotations')
-class Annotations
-{
+class Annotation {
     @GET
     Response Process(@QueryParam('annotations') String annotations,
                      @QueryParam('docID') String docID)
@@ -33,11 +21,6 @@ class Annotations
             //call the processor with the selected annotations
         }
     }
-
-    //********************************************************************
-    //Everything that I would normally put outside, is below this because
-    // of errors I couldn't resolve otherwise
-    //********************************************************************
 
     // conll can handle all combinations of annotations
     def AcceptableAntns = ["PENN", "SENTENCES", "BIBER", "C5", "C7", "CB",
@@ -51,16 +34,25 @@ class Annotations
      * @return A boolean response if the annotations passed in are acceptable for
      * conll processing.
      */
-    boolean validAnnotations(ArrayList<String> antnArray) {
+    def validAnnotations (antnArray)
+    {
         boolean returnval = true
-        for (antn in antnArray) {
-            // if any of the annotations in the array equal the current annotation
-            if (!AcceptableAntns.any(equals(antn))) {
-                returnval = false
-                break
-            }
+        if (antnArray == [])
+        {
+            return false
         }
-        return returnval
+        else {
+            for (antn in antnArray)
+            {
+                // if any of the annotations in the array equal the current annotation
+                if (!AcceptableAntns.any { it.equals(antn) })
+                {
+                    returnval = false
+                    break
+                }
+            }
+            return returnval
+        }
     }
 
     /**
@@ -68,10 +60,14 @@ class Annotations
      * @param antnString - The comma separated string of selected annotations
      * @return An ArrayList<String> of the selected annotations
      */
-    ArrayList<String> parseAnnotations(String antnString)
+    def parseAnnotations(antnString)
     {
-        def retArray = antnString.split(',')
-        return retArray
+        if (antnString == "")
+        {
+            return []
+        } else {
+            def retArray = antnString.split(',')
+            return retArray
+        }
     }
 }
-
