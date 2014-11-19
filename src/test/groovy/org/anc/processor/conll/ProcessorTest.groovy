@@ -20,7 +20,9 @@ class ProcessorTest
 
     @Before
     void setup() {
-        processor = new ConllProcessor()
+        processor = new ConllProcessor(["f.penn", "f.s", "f.cb", "f.event", "f.fn", "f.fntok",
+                                        "f.logical", "f.mpqa", "f.ns", "f.ne", "f.ptb", "f.ptbtok",
+                                        "f.vc"] as HashSet<String>)
     }
 
     @After
@@ -31,7 +33,7 @@ class ProcessorTest
 
     /**
      * Cases to test: passing (1, all, a few)
-     *                failing (none, one wrong in a list of right, all wrong, capital?)
+     *                failing (none, one wrong in a list of right, all wrong, capital)
      */
     @Test
     void testValidAnnotations()
@@ -39,14 +41,14 @@ class ProcessorTest
         //PASSING ************
         //ONE
         def pass1 = ["f.penn"] as ArrayList<String>
-        assertTrue(processor.validAnnotations(pass1))
+        assertTrue(processor.validAnnotations(pass1, processor.ACCEPTABLE))
 
         //FEW
         def pass2 = ["f.penn", "f.s"] as ArrayList<String>
-        assertTrue(processor.validAnnotations(pass2))
+        assertTrue(processor.validAnnotations(pass2, processor.ACCEPTABLE))
 
         //ALL
-        assertTrue(processor.validAnnotations(ConllProcessor.ACCEPTABLE))
+        assertTrue(processor.validAnnotations(processor.ACCEPTABLE as ArrayList<String>, processor.ACCEPTABLE))
 
         //FAILING ***********
         /* Causes an error when
@@ -57,16 +59,15 @@ class ProcessorTest
 
         //ALL
         def fail2 = ["thing1", "thing2", "red", "blue"]
-        assertFalse(processor.validAnnotations(fail2))
+        assertFalse(processor.validAnnotations(fail2, processor.ACCEPTABLE))
 
         //ONE WRONG IN LIST OF RIGHT
         def fail3 = ["penn", "f.cb", "f.penn", "f.ne"]
-        assertFalse(processor.validAnnotations(fail3))
+        assertFalse(processor.validAnnotations(fail3, processor.ACCEPTABLE))
 
-        //Will capitals matter?
-        // Yes, annotation type names are case sensitive. Keith
+        //Capitals
         def fail4 = ["F.PENN"]
-        assertFalse(processor.validAnnotations(fail4))
+        assertFalse(processor.validAnnotations(fail4, processor.ACCEPTABLE))
 
     }
     @Test
@@ -83,10 +84,9 @@ class ProcessorTest
         List expected = ["f.penn"]
         List actual = processor.parseAnnotations("penn")
         assertTrue "Actual is " + actual, actual == expected
-//        assertTrue(testy.parseAnnotations("penn").equals(expected))
 
         //TWO WORDS
-        expected = ["f.penn", "f.cb"] //as HashSet
+        expected = ["f.penn", "f.cb"]
         assertTrue(processor.parseAnnotations("penn,cb") == expected)
 
         //N WORDS
