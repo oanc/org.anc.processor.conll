@@ -20,9 +20,7 @@ class ProcessorTest
 
     @Before
     void setup() {
-        processor = new ConllProcessor(["f.penn", "f.s", "f.cb", "f.event", "f.fn", "f.fntok",
-                                        "f.logical", "f.mpqa", "f.ns", "f.ne", "f.ptb", "f.ptbtok",
-                                        "f.vc"] as HashSet<String>)
+        processor = new ConllProcessor()
     }
 
     @After
