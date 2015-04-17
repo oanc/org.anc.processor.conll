@@ -1,7 +1,5 @@
 package org.anc.processor.conll
 
-import org.anc.index.api.Index
-import org.anc.index.core.IndexImpl
 import org.anc.processor.conll.i18n.Messages
 import org.junit.*
 
@@ -36,36 +34,28 @@ class ProcessorTest
     @Test
     void testValidAnnotations()
     {
-        //PASSING ************
+        //PASSING
+
         //ONE
-        def pass1 = ["f.penn"] as ArrayList<String>
-        assertTrue(processor.validAnnotations(pass1, processor.ACCEPTABLE))
+        def pass1 = ["f.penn"] as List<String>
+        assertTrue(processor.validAnnotations(pass1))
 
         //FEW
-        def pass2 = ["f.penn", "f.s"] as ArrayList<String>
-        assertTrue(processor.validAnnotations(pass2, processor.ACCEPTABLE))
+        def pass2 = ["f.penn", "f.sentences"] as List<String>
+        assertTrue(processor.validAnnotations(pass2))
 
-        //ALL
-        assertTrue(processor.validAnnotations(processor.ACCEPTABLE as ArrayList<String>, processor.ACCEPTABLE))
 
-        //FAILING ***********
-        /* Causes an error when
-        //NONE
-        def fail1 = [] as ArrayList<String>
-        assertFalse(testy.validAnnotations(fail1))
-         */
-
-        //ALL
-        def fail2 = ["thing1", "thing2", "red", "blue"]
-        assertFalse(processor.validAnnotations(fail2, processor.ACCEPTABLE))
+        //FAILING
+        def fail2 = ["thing1", "thing2", "red", "blue"] as List<String>
+        assertFalse(processor.validAnnotations(fail2))
 
         //ONE WRONG IN LIST OF RIGHT
-        def fail3 = ["penn", "f.cb", "f.penn", "f.ne"]
-        assertFalse(processor.validAnnotations(fail3, processor.ACCEPTABLE))
+        def fail3 = ["penn", "f.cb", "f.penn", "f.ne"] as List<String>
+        assertFalse(processor.validAnnotations(fail3))
 
         //Capitals
-        def fail4 = ["F.PENN"]
-        assertFalse(processor.validAnnotations(fail4, processor.ACCEPTABLE))
+        def fail4 = ["F.PENN"] as List<String>
+        assertFalse(processor.validAnnotations(fail4))
 
     }
     @Test
@@ -76,7 +66,7 @@ class ProcessorTest
     {
         //EMPTY STRING
         // The empty string should result in ALL annotation types being selected
-        assertTrue("Empty string should return all acceptable annotations.", processor.parseAnnotations("") == ConllProcessor.ACCEPTABLE.toList())
+        assertTrue("Empty string should return all acceptable annotations.", processor.parseAnnotations("") == processor.Acceptable.toList())
 
         //ONE WORD
         List expected = ["f.penn"]
@@ -113,5 +103,4 @@ class ProcessorTest
         assertTrue response.entity, response.status == 500
         assertTrue "Wrong error message returned.", response.entity == MESSAGES.INVALID_TYPE
     }
-
 }
